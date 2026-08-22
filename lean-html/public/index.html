@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" lean>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lean HTML – Building a Cheaper Internet</title>
+  <meta name="description" content="Additive HTML layer that prefers local and content-addressed resources to reduce cost and increase resilience.">
+
+  <script type="module" src="../src/lean-html.js"></script>
+
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: Canvas;
+      --text: CanvasText;
+      --accent: #22c55e;
+      --border: color-mix(in srgb, CanvasText 15%, transparent);
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.55;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 44rem;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 4rem;
+    }
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+    h1 { font-size: 1.85rem; margin: 0 0 0.4rem; letter-spacing: -0.02em; }
+    .tagline { opacity: 0.75; margin: 0; }
+    h2 { font-size: 1.25rem; margin-top: 2.2rem; }
+    article[data-lean-integrity] {
+      border-left: 3px solid #3b82f6;
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+    }
+    [data-lean-resolved="local"] {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    .grid {
+      display: grid;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    @media (min-width: 560px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.2rem;
+    }
+    .card h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+    .card p { margin: 0; font-size: 0.92rem; opacity: 0.85; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.84rem;
+    }
+    pre {
+      background: color-mix(in srgb, CanvasText 6%, transparent);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      color: var(--accent);
+    }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Lean HTML</h1>
+      <p class="tagline">An additive layer that makes the internet cheaper and more resilient.</p>
+      <p style="margin-top:1rem">
+        <span class="status" id="status">Initializing…</span>
+      </p>
+    </header>
+
+    <main>
+      <article
+        integrity="sha256-demo"
+        provenance="did:example:lean"
+        content-address="sha256-lean-intro-v1"
+        local-first>
+
+        <h2>What this is</h2>
+        <p>
+          Lean HTML is a small set of attributes and a processing layer that sits
+          on top of ordinary HTML. Current browsers ignore the new attributes.
+          When the Lean layer is present, documents can prefer local and
+          content-addressed resources, verify integrity, and reduce unnecessary
+          network cost.
+        </p>
+        <p>
+          It is the practical first step toward the internet principles we care about:
+          user agency, verifiability, and cost as a first-class constraint.
+        </p>
+      </article>
+
+      <h2>How it reduces cost</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Local-first</h3>
+          <p>Try the local store before the network. Repeated visits and shared content stop costing bandwidth.</p>
+        </div>
+        <div class="card">
+          <h3>Content-addressed</h3>
+          <p>Identify resources by hash. Identical bytes are the same resource no matter where they came from.</p>
+        </div>
+        <div class="card">
+          <h3>Integrity</h3>
+          <p>Verify what you received. Reduces the need to trust a single origin or CDN.</p>
+        </div>
+        <div class="card">
+          <h3>Declarative</h3>
+          <p>Keep more behavior in the document. Less JavaScript means less weight and fewer moving parts.</p>
+        </div>
+      </div>
+
+      <h2>Minimal usage</h2>
+      <pre><code>&lt;html lean&gt;
+&lt;link rel="stylesheet"
+      href="/app.css"
+      content-address="sha256-…"
+      integrity="sha256-…"
+      local-first&gt;
+
+&lt;article content-address="sha256-…"
+         integrity="sha256-…"
+         local-first
+         provenance="did:key:…"&gt;
+  …
+&lt;/article&gt;</code></pre>
+
+      <h2>Current capabilities</h2>
+      <ul>
+        <li>Attribute scanning and progressive enhancement</li>
+        <li>IndexedDB content-addressed store</li>
+        <li>Service Worker for basic local-first caching</li>
+        <li>Integrity and provenance markers</li>
+      </ul>
+
+      <h2>Register the service worker</h2>
+      <p>
+        <button id="sw-btn" type="button">Enable local-first Service Worker</button>
+      </p>
+      <p id="sw-status" style="font-size:0.9rem;opacity:0.8"></p>
+    </main>
+
+    <footer>
+      <p>
+        Lean HTML is a foundation, not a finished internet.
+        It makes the cheaper path available on the web we already have.
+      </p>
+      <p>
+        Source structure lives in this repo. Extend the store, add Helia, or propose the attributes upstream.
+      </p>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { runLeanHTML } from '../src/lean-html.js';
+
+    // Status
+    const status = document.getElementById('status');
+    status.textContent = 'Lean HTML active';
+
+    // Service Worker registration
+    const btn = document.getElementById('sw-btn');
+    const swStatus = document.getElementById('sw-status');
+
+    btn?.addEventListener('click', async () => {
+      if (!('serviceWorker' in navigator)) {
+        swStatus.textContent = 'Service Workers not supported in this browser.';
+        return;
+      }
+      try {
+        const reg = await navigator.serviceWorker.register('../src/sw.js', { scope: './' });
+        swStatus.textContent = 'Service Worker registered. Local-first caching enabled for this origin.';
+        btn.disabled = true;
+      } catch (err) {
+        swStatus.textContent = 'Registration failed: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>

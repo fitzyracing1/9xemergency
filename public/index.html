@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" emergency lean>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Internet</title>
+  <meta name="description" content="Resilient local-first information layer for when the normal internet fails.">
+
+  <script type="module" src="../src/emergency.js"></script>
+
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f1419;
+      --fg: #e7ecf1;
+      --muted: #8b9aab;
+      --p0: #ef4444;
+      --p1: #f59e0b;
+      --p2: #3b82f6;
+      --ok: #22c55e;
+      --border: #1e293b;
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 42rem; margin: 0 auto; padding: 1.5rem 1.1rem 3rem; }
+    header { margin-bottom: 1.75rem; }
+    h1 { font-size: 1.6rem; margin: 0 0 0.35rem; letter-spacing: -0.02em; }
+    .tag { color: var(--muted); margin: 0; font-size: 0.95rem; }
+    .mode-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.25rem 0 1.75rem;
+    }
+    button {
+      background: #1e293b;
+      color: var(--fg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.45rem 0.85rem;
+      font: inherit;
+      cursor: pointer;
+    }
+    button.active { border-color: var(--ok); color: var(--ok); }
+    button:hover { background: #273548; }
+    .status {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    article {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 0.9rem;
+    }
+    article[data-priority="0"] { border-left: 4px solid var(--p0); }
+    article[data-priority="1"] { border-left: 4px solid var(--p1); }
+    article[data-priority="2"] { border-left: 4px solid var(--p2); }
+    article[data-deferred="true"] { opacity: 0.45; }
+    article h2 { font-size: 1.05rem; margin: 0 0 0.4rem; }
+    article p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+    .meta {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.65rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .badge {
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      background: #1e293b;
+    }
+    .badge.local { color: var(--ok); }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Emergency Internet</h1>
+      <p class="tag">Local-first • Verifiable • Works when the network doesn’t</p>
+    </header>
+
+    <div class="mode-bar" id="modes">
+      <button data-mode="normal">Normal</button>
+      <button data-mode="degraded">Degraded</button>
+      <button data-mode="isolated" class="active">Isolated</button>
+      <button data-mode="broadcast">Broadcast</button>
+    </div>
+
+    <p class="status" id="status">Mode: isolated · local store ready</p>
+
+    <main>
+      <!-- P0 Life safety -->
+      <article emergency priority="0"
+               content-address="em-p0-evacuation-v1"
+               local-first
+               integrity="sha256-demo"
+               shareable>
+        <h2>P0 — Evacuation route open</h2>
+        <p>North bridge is clear. Assemble at the high school parking lot. Bring water and ID.</p>
+        <div class="meta">
+          <span class="badge">priority 0</span>
+          <span class="badge local" data-role="resolved">local</span>
+        </div>
+      </article>
+
+      <!-- P1 Coordination -->
+      <article emergency priority="1"
+               content-address="em-p1-water-v1"
+               local-first
+               shareable>
+        <h2>P1 — Water distribution</h2>
+        <p>Bottled water at Community Center, 14:00–18:00. Limit 2 gallons per person.</p>
+        <div class="meta">
+          <span class="badge">priority 1</span>
+          <span class="badge" data-role="resolved">…</span>
+        </div>
+      </article>
+
+      <!-- P2 Situational -->
+      <article emergency priority="2"
+               content-address="em-p2-power-v1"
+               local-first>
+        <h2>P2 — Power status</h2>
+        <p>Grid offline in sectors 3–5. Generators reported at clinic and fire station.</p>
+        <div class="meta">
+          <span class="badge">priority 2</span>
+          <span class="badge" data-role="resolved">…</span>
+        </div>
+      </article>
+
+      <!-- P3 General (will be deferred in degraded/isolated) -->
+      <article priority="3" content-address="em-p3-news-v1">
+        <h2>P3 — General update</h2>
+        <p>Non-critical background information. Deferred under pressure.</p>
+        <div class="meta">
+          <span class="badge">priority 3</span>
+        </div>
+      </article>
+    </main>
+
+    <footer>
+      <p>
+        This is the Emergency Internet document layer.
+        Critical messages stay available offline. Low-priority content yields under pressure.
+        Built on local-first and content-addressed principles.
+      </p>
+      <p style="margin-top:0.6rem">
+        <button id="sw-btn" type="button">Enable offline Service Worker</button>
+        <span id="sw-status"></span>
+      </p>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { setMode, getMode, initEmergency, Mode } from '../src/emergency.js';
+
+    await initEmergency({ mode: Mode.ISOLATED });
+
+    const status = document.getElementById('status');
+    const buttons = document.querySelectorAll('#modes button');
+
+    function refreshUI() {
+      const mode = getMode();
+      status.textContent = `Mode: ${mode} · local store ready`;
+      buttons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+      });
+      // Re-process for deferred styling
+      document.querySelectorAll('[priority]').forEach(el => {
+        const p = parseInt(el.getAttribute('priority') || '3', 10);
+        if ((mode === 'degraded' || mode === 'isolated') && p >= 3) {
+          el.dataset.deferred = 'true';
+        } else {
+          delete el.dataset.deferred;
+        }
+      });
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setMode(btn.dataset.mode);
+        refreshUI();
+      });
+    });
+
+    refreshUI();
+
+    // Service worker
+    document.getElementById('sw-btn')?.addEventListener('click', async () => {
+      const el = document.getElementById('sw-status');
+      if (!('serviceWorker' in navigator)) {
+        el.textContent = ' Not supported';
+        return;
+      }
+      try {
+        await navigator.serviceWorker.register('../src/sw.js', { scope: './' });
+        el.textContent = ' Active – offline capable';
+      } catch (e) {
+        el.textContent = ' Failed: ' + e.message;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "emergency-internet",
+  "version": "0.1.0",
+  "description": "Resilient local-first information layer for degraded and disconnected conditions",
+  "type": "module",
+  "main": "src/emergency.js",
+  "scripts": {
+    "start": "npx serve .",
+    "demo": "npx serve public"
+  },
+  "keywords": ["emergency", "local-first", "offline", "resilient", "html", "mesh"],
+  "license": "MIT"
+}
