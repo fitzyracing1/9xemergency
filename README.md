@@ -112,3 +112,8 @@ See `lean-html/README.md` and `lean-html/docs/ARCHITECTURE.md`.
 ## License
 
 MIT
+
+## Documentation
+
+- In-repo docs: [docs/](docs/index.md)
+- Wiki: [https://github.com/fitzyracing1/9xemergency/wiki](https://github.com/fitzyracing1/9xemergency/wiki)
