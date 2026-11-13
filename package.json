@@ -9,5 +9,9 @@
     "demo": "npx serve public"
   },
   "keywords": ["emergency", "local-first", "offline", "resilient", "html", "mesh"],
-  "license": "MIT"
+  "license": "MIT",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/fitzyracing1"
+  }
 }
